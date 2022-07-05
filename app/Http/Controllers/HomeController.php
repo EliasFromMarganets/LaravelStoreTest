@@ -12,8 +12,10 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index() {
-        $products = Product::all();
+        $products = Product::orderBy('created_at')->take(8)->get();
 
-        return view('home.index');
+        return view('home.index', [
+            'products' => $products,
+        ]);
     }
 }
