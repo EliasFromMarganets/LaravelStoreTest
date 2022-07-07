@@ -198,6 +198,7 @@
         </div>
     </div>
 </div>
+<!-- Newsletter -->
 
 @include('layouts.newsletter')
 @endsection
