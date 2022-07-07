@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="product_content">
                                     <div class="product_title">
-                                        <a href="{{route('showItem',['category', $product->id])}}">{{$product->title}}</a>
+                                        <a href="{{route('showItem',['category', $product->alias])}}">{{$product->title}}</a>
                                     </div>
                                     @if($product->new_price > 0)
                                         <div style="text-decoration: line-through">${{$product->price}}</div>

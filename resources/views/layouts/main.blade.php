@@ -25,11 +25,11 @@
                 <div class="row">
                     <div class="col">
                         <div class="header_content d-flex flex-row align-items-center justify-content-start">
-                            <div class="logo"><a href="#">Sublime.</a></div>
+                            <div class="logo"><a href="/">Sublime.</a></div>
                             <nav class="main_nav">
                                 <ul>
                                     <li class="hassubs active">
-                                        <a href="index.html">Home</a>
+                                        <a href="/">Home</a>
                                         <ul>
                                             <li><a href="categories.html">Categories</a></li>
                                             <li><a href="product.html">Product</a></li>
