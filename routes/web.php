@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/{category}', [ProductController::class, 'showCategory'])->name('showCategory');
 Route::get('/{category}/{alias}', [ProductController::class, 'showItem'])->name('showItem');
+//Route::get('/{category}/{sort-by}', [ProductController::class, 'sortItems'])->name('sortItems');

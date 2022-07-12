@@ -7,6 +7,45 @@
 
 @section('custom_js')
     <script src="/js/categories.js"></script>
+{{--    <script src="/js/sort-items.js"></script>--}}
+    <script>
+        $(document).ready(function () {
+            $(".product_sorting_btn").click(function () {
+                let dataOption = $(this).attr("data-isotope-option");
+                // let stringGet = "/{{route('showCategory',$category->alias)}}/" + dataOption.sortBy;
+                $.ajax({
+                    url: "{{route('showCategory',$category->alias)}}",
+                    type: 'GET',
+                    data: {
+                        dataOption,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (data) => {
+                        let positionParameters = location.pathname.indexOf('?');
+                        let url = location.pathname.substring(positionParameters,location.pathname.length);
+                        let newUrl = url + '?';
+                        let sortType = JSON.parse(dataOption);
+                        newUrl += 'sortBy=' + sortType.sortBy;
+                        history.pushState({}, '', newUrl);
+
+                        $(".product_grid").html(data);
+                        $(".product_grid").isotope('destroy');
+                        // $(".product_grid").imagesLoaded ( function () )
+                        $(".product_grid").isotope({
+                            layoutMode: 'fitRows',
+                            itemSelector: '.product',
+                            percentPosition: true,
+                            fitRows: {
+                                gutter: 30
+                            }
+                        })
+                    },
+                })
+            })
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -51,10 +90,14 @@
                                             <li class="product_sorting_btn"
                                                 data-isotope-option='{ "sortBy": "original-order" }'>
                                                 <span>Default</span></li>
-                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "price" }'>
-                                                <span>Price</span></li>
-                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "stars" }'>
-                                                <span>Name</span></li>
+                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "price-low-high" }'>
+                                                <span>Price Low-High</span></li>
+                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "price-high-low" }'>
+                                                <span>Price High-Low</span></li>
+                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "name-a-z" }'>
+                                                <span>Name A-Z</span></li>
+                                            <li class="product_sorting_btn" data-isotope-option='{ "sortBy": "name-z-a" }'>
+                                                <span>Name Z-A</span></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -69,7 +112,7 @@
                     <div class="product_grid">
 
                         <!-- Product -->
-                        @foreach($category->products as $product)
+                        @foreach($products as $product)
                             @php
                                 $image = '';
                                 if(count($product->images) > 0) {
