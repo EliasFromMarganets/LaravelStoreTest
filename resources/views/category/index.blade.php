@@ -11,23 +11,24 @@
     <script>
         $(document).ready(function () {
             $(".product_sorting_btn").click(function () {
-                let dataOption = $(this).attr("data-isotope-option");
-                // let stringGet = "/{{route('showCategory',$category->alias)}}/" + dataOption.sortBy;
+                let dataOptions = $(this).attr("data-isotope-option");
+                let dataOption = JSON.parse(dataOptions);
                 $.ajax({
                     url: "{{route('showCategory',$category->alias)}}",
                     type: 'GET',
                     data: {
-                        dataOption,
+                        sortBy: dataOption.sortBy,
+                        page: {{isset($_GET['page']) ? $_GET['page'] : 1}}
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: (data) => {
+                        console.log(data);
                         let positionParameters = location.pathname.indexOf('?');
                         let url = location.pathname.substring(positionParameters,location.pathname.length);
                         let newUrl = url + '?';
-                        let sortType = JSON.parse(dataOption);
-                        newUrl += 'sortBy=' + sortType.sortBy;
+                        newUrl += 'sortBy=' + dataOption.sortBy + "&page={{isset($_GET['page']) ? $_GET['page'] : 1}}";
                         history.pushState({}, '', newUrl);
 
                         $(".product_grid").html(data);
@@ -79,7 +80,9 @@
                     <!-- Product Sorting -->
                     <div
                         class="sorting_bar d-flex flex-md-row flex-column align-items-md-center justify-content-md-start">
-                        <div class="results">Showing <span>{{$category->products->count()}}</span> results</div>
+                        <div class="results">Showing <span>{{$products->count()}} of {{$category->products->count()}}
+                            </span> results
+                        </div>
                         <div class="sorting_container ml-md-auto">
                             <div class="sorting">
                                 <ul class="item_sorting">
@@ -141,13 +144,7 @@
                         @endforeach
 
                     </div>
-                    <div class="product_pagination">
-                        <ul>
-                            <li class="active"><a href="#">01.</a></li>
-                            <li><a href="#">02.</a></li>
-                            <li><a href="#">03.</a></li>
-                        </ul>
-                    </div>
+                    {{$products->appends(request()->query())->links('pagination.index')}}
 
                 </div>
             </div>

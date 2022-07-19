@@ -20,20 +20,20 @@ class ProductController extends Controller
     public function showCategory(Request $request, $alias)
     {
         $category = Category::where('alias', $alias)->first();
-
-        $products = Product::where('category_id', $category['id'])->get();
+        $paginate = 2;
+        $products = Product::where('category_id', $category['id'])->paginate($paginate);
 
         if ($request->ajax()) {
-            $dataOption = json_decode($request->dataOption);
-//            return $dataOption->sortBy;
-            switch ($dataOption->sortBy) {
-                case "price-low-high": $products = Product::where('category_id', $category['id'])->orderBy('price')->get();
+//            $dataOption = json_decode($request->dataOption);
+//            return $request->sortBy;
+            switch ($request->sortBy) {
+                case "price-low-high": $products = Product::where('category_id', $category['id'])->orderBy('price')->paginate($paginate);
                 break;
-                case "price-high-low": $products = Product::where('category_id', $category['id'])->orderBy('price', 'desc')->get();
+                case "price-high-low": $products = Product::where('category_id', $category['id'])->orderBy('price', 'desc')->paginate($paginate);
                 break;
-                case "name-a-z": $products = Product::where('category_id', $category['id'])->orderBy('title')->get();
+                case "name-a-z": $products = Product::where('category_id', $category['id'])->orderBy('title')->paginate($paginate);
                 break;
-                case "name-z-a": $products = Product::where('category_id', $category['id'])->orderBy('title', 'desc')->get();
+                case "name-z-a": $products = Product::where('category_id', $category['id'])->orderBy('title', 'desc')->paginate($paginate);
                 break;
             }
             return view('ajax.product_sort', [
